@@ -1,5 +1,5 @@
 import { AppRegistry } from 'react-native';
 
-import Router from './Router';
+import App from './Router';
 
-AppRegistry.registerComponent('minera', () => Router);
+AppRegistry.registerComponent('minera', () => App);
