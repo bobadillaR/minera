@@ -17,7 +17,7 @@ export default class Login extends Component {
           <FormInput onChangeText={text => this.setState({ user: text })} />
           <FormLabel>Contraseña</FormLabel>
           <FormInput secureTextEntry onChangeText={text => this.setState({ password: text })} />
-          <Button large backgroundColor="#e67e22" raised icon={{ name: 'edit' }} title="Iniciar Sesion" onPress={Actions.map} />
+          <Button large backgroundColor="#e67e22" raised icon={{ name: 'edit' }} title="Iniciar Sesion" onPress={Actions.carSelector} />
         </Card>
       </View>
     );
