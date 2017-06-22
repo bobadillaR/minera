@@ -13,7 +13,7 @@ export default class App extends Component {
           <Scene key="login" component={Login} />
           <Scene key="carSelector" component={CarSelector} />
           <Scene key="routeSelector" component={RouteSelector} />
-          <Scene key="map" component={Map} />
+          <Scene key="map" component={Map} initial />
         </Scene>
       </Router>
     );
