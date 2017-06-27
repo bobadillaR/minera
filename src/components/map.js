@@ -15,8 +15,8 @@ export default class Router extends Component {
       region: {
         latitude: -33.35,
         longitude: -70.55,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
+        latitudeDelta: 0.3,
+        longitudeDelta: 0.3,
       },
       vehicles: [
         { name: 'Bus 1',
@@ -48,6 +48,7 @@ export default class Router extends Component {
       active: 0,
       alert: false,
       problems: [],
+      centerMode: false,
     };
   }
 
@@ -116,16 +117,24 @@ export default class Router extends Component {
   }
 
   render() {
-    const { region, myPosition, circle, vehicles, polyline, active, problems, alert } = this.state;
+    const { region, myPosition, circle, vehicles, polyline, active, problems, centerMode } = this.state;
+    console.log(region);
     return (
       <View style={{ ...StyleSheet.absoluteFillObject }}>
         <MapView
           style={{ ...StyleSheet.absoluteFillObject }}
-          region={region}
+          region={centerMode ? {
+            latitudeDelta: 0.01,
+            longitudeDelta: 0.006,
+            latitude: vehicles[active].position.latitude,
+            longitude: vehicles[active].position.longitude,
+          } : region}
           // showsMyLocationButton
           showsCompass
-          onRegionChange={regionAux => this.setState({ region: regionAux })}
+          onRegionChange={regionAux => this.setState({ region: regionAux, centerMode: false })}
           loadingEnabled
+          showsBuildings
+          tilted={45}
         >
           <MapView.Marker coordinate={myPosition} title="titulo" />
           {vehicles.map((car, key) =>
@@ -145,7 +154,7 @@ export default class Router extends Component {
             </MapView.Marker>),
           )}
         </MapView>
-        <View style={{ position: 'absolute', top: 15, right: 15 }}>
+        <View style={{ position: 'absolute', top: 15, left: 15 }}>
           <Icon
             name="report-problem"
             raised
@@ -155,10 +164,26 @@ export default class Router extends Component {
               'Hay una emergencia',
               'Por favor, reduce tu velocidad y ten cuidado en la ruta',
               [
-                { text: 'OK', onPress: () => console.log('OK Pressed') },
+                { text: 'OK' },
               ],
-              { cancelable: false }
+              { cancelable: false },
             )}
+          />
+          {vehicles[0].position === vehicles[1].position &&
+            Alert.alert(
+             'Te vas a cruzar con otro vehiculo',
+             'Por favor, reduce tu velocidad y ten cuidado en la ruta',
+             [{ text: 'OK' }],
+             { cancelable: false },
+         )}
+        </View>
+        <View style={{ position: 'absolute', top: 15, right: 15 }}>
+          <Icon
+            name="navigation"
+            raised
+            color={centerMode ? 'rgba(46, 204, 113,1.0)' : 'rgba(52, 152, 219,1)'}
+            size={35}
+            onPress={() => this.setState({ centerMode: !this.state.centerMode })}
           />
         </View>
         <View style={{ flexDirection: 'row', alignSelf: 'center', justifyContent: 'space-around', backgroundColor: 'rgba(52, 73, 94,1.0)', borderRadius: 20, bottom: 20, position: 'absolute' }}>
